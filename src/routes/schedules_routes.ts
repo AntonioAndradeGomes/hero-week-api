@@ -29,6 +29,8 @@ class SchedulesRoutes {
       this.authMiddleware.auth.bind(this.authMiddleware),
       this.schedulesController.update.bind(this.schedulesController)
     );
+
+    
     return this.router;
   }
 }

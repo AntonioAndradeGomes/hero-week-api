@@ -55,6 +55,17 @@ class UsersController {
       next(err);
     }
   }
+  
+  //refresh token
+  async refresh(request: Request, response: Response, next: NextFunction) {
+    const {refresh_token} = request.body;
+    try{
+      const result = await this.usersServices.refrash(refresh_token);
+      return response.json(result);
+    }catch(err){
+      next(err);
+    }
+  }
 }
 
 export { UsersController };

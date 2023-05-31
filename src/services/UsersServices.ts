@@ -3,7 +3,7 @@ import { ICreateUser, IUpdateUser } from "../interfaces/UsersInterfaces";
 import { UsersRepository } from "../repositories/UsersRepository";
 import { v4 as uuid } from "uuid";
 import { s3 } from "../config/aws";
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 
 class UsersServices {
   private usersRepository: UsersRepository;
@@ -82,14 +82,45 @@ class UsersServices {
       subject: findUser.id,
       expiresIn: 60 * 15, 
     });
+    
+    const refreshToken = sign({email}, secretKey, {
+      subject: findUser.id,
+      expiresIn: '7d', 
+    });
 
     return {
       token,
+      refresh_token: refreshToken,
       user: {
         name: findUser.name,
         email: findUser.email,
       }
     }
+  }
+
+  async refrash(refresh_token: string) {
+    
+    if(!refresh_token){
+      throw new Error('Refrash token missing');
+    }
+
+    let secretKey : string | undefined =   process.env.ACCESS_KEY_TOKEN;
+    
+    if(!secretKey){
+      return new Error('There is no refrash token key');
+    }
+
+    const verifyRefresh = verify(refresh_token, secretKey);
+
+    const { sub } = verifyRefresh;
+
+    const newToken = sign({sub}, secretKey, {
+      expiresIn: 60 * 15, 
+    });
+
+    return {
+      token: newToken
+    };
   }
 }
 export { UsersServices };

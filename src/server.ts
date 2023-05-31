@@ -1,15 +1,16 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import { UsersRoutes } from "./routes/users_routes";
 import { SchedulesRoutes } from "./routes/schedules_routes";
-
+import cors from "cors";
 
 const app: Application = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const usersRoutes = new UsersRoutes().getRoutes();
-const schedulesRoutes= new SchedulesRoutes().getRoutes();
+const schedulesRoutes = new SchedulesRoutes().getRoutes();
 
 app.use("/users", usersRoutes);
 app.use("/schedules", schedulesRoutes);

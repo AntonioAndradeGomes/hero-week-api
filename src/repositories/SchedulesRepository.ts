@@ -3,21 +3,22 @@ import { prisma } from "../database/prisma";
 import { ICreateSchedules } from "../interfaces/SchedulesInterface";
 
 class SchedulesRepository {
-  //todo: aula 2 - 56:40 https://www.youtube.com/watch?v=aYHhnX3qSPY&ab_channel=HeroCode
-  async create({ name, phone, date }: ICreateSchedules) {
+
+  async create({ name, phone, date, user_id }: ICreateSchedules) {
     const result = await prisma.schedule.create({
       data: {
         name,
         phone,
         date,
+        user_id
       },
     });
     return result;
   }
 
-  async findByDate(date: Date) {
+  async findByDate(date: Date, user_id: string) {
     const result = await prisma.schedule.findFirst({
-      where: { date },
+      where: { date, user_id },
     });
     return result;
   }

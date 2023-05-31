@@ -10,44 +10,51 @@ class SchedulesController {
 
   async store(request: Request, response: Response, next: NextFunction) {
     const { name, phone, date } = request.body;
+    const { user_id } = request;
     try {
-      const result = await this.schedulesService.create({ name, phone, date });
+      const result = await this.schedulesService.create({
+        name,
+        phone,
+        date,
+        user_id,
+      });
       return response.status(201).json(result);
     } catch (err) {
       next(err);
     }
   }
 
-  async index(request: Request, response: Response, next: NextFunction){
-    const {date} = request.query;
+  async index(request: Request, response: Response, next: NextFunction) {
+    const { date } = request.query;
     const parseDate = date ? parseISO(date.toString()) : new Date();
-    try{
+    try {
       const result = await this.schedulesService.index(parseDate);
       return response.json(result);
-    }catch(err){
+    } catch (err) {
       next(err);
     }
   }
 
-  async update(request: Request, response: Response, next: NextFunction){
-    const {id} = request.params;
-    const {date} = request.body;
-    try{
-      const result = await this.schedulesService.update(id, date);
+  async update(request: Request, response: Response, next: NextFunction) {
+    const { id } = request.params;
+    const { date } = request.body;
+    const { user_id } = request;
+    try {
+      const result = await this.schedulesService.update(id, date, user_id);
       return response.json(result);
-    }catch(err){
+    } catch (err) {
       next(err);
     }
   }
 
-  async delete(request: Request, response: Response, next: NextFunction){
-   
-    try{
-      
-    }catch(err){
+  async delete(request: Request, response: Response, next: NextFunction) {
+    try {
+    } catch (err) {
       next(err);
     }
   }
+
+
 }
 
 export { SchedulesController };
